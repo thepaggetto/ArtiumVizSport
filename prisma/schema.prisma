@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  isAdmin   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sessions  Session[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expires   DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model EventDay {
+  id          String   @id @default(cuid())
+  date        DateTime
+  location    String
+  broadcaster String
+  matches     Match[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Match {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  tipoGara       String
+  nomeCampionato String   @default("")
+  nomePL1        String
+  recordPL1      String
+  cittaPL1       String
+  nazionalitaPL1 String
+  svgPL1         String
+  etàPL1         String
+  pesoPL1        String
+  altezzaPL1     String
+  fotoPL1        String   @default("")
+  nomePL2        String
+  recordPL2      String
+  cittaPL2       String
+  nazionalitaPL2 String
+  svgPL2         String
+  etàPL2         String
+  pesoPL2        String
+  altezzaPL2     String
+  fotoPL2        String   @default("")
+  eventDayId     String
+  eventDay       EventDay @relation(fields: [eventDayId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
