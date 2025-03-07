@@ -107,23 +107,14 @@ export function EventDayCard({ eventDay }: EventDayCardProps) {
             <Button variant="outline" size="sm" className="w-full justify-start" asChild>
               <Link href={`/api/public/event-days/${eventDay.id}/matches`} target="_blank" rel="noopener noreferrer">
                 <FileJson className="mr-2 h-4 w-4" />
-                JSON Matches
+                Endopoint Dati Match
               </Link>
             </Button>
-            <Button variant="outline" size="sm" className="w-full justify-start" asChild>
-              <Link
-                  href={`/api/public/event-days/${eventDay.id}/matches?format=singular`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-              >
-                <FileJson className="mr-2 h-4 w-4" />
-                Singular Format
-              </Link>
-            </Button>
+
             <Button variant="outline" size="sm" className="w-full justify-start" asChild>
               <Link href={`/api/public/event-days/${eventDay.id}/players`} target="_blank" rel="noopener noreferrer">
                 <Users className="mr-2 h-4 w-4" />
-                JSON Players
+                Endpoint Dati Atleti
               </Link>
             </Button>
           </div>
@@ -148,7 +139,7 @@ export function EventDayCard({ eventDay }: EventDayCardProps) {
                             <div className="flex items-center gap-2">
                               <div className="relative h-5 w-5 overflow-hidden rounded-full">
                                 <Image
-                                    src={`https://flagcdn.com/w40/${match.nazionalitaPL1.substring(0, 2).toLowerCase()}.png`}
+                                    src={`https://flagcdn.com/${match.nazionalitaPL1.substring(0, 2).toLowerCase()}.svg`}
                                     alt={match.nazionalitaPL1}
                                     fill
                                     className="object-cover"
@@ -165,7 +156,7 @@ export function EventDayCard({ eventDay }: EventDayCardProps) {
                             <div className="flex items-center gap-2">
                               <div className="relative h-5 w-5 overflow-hidden rounded-full">
                                 <Image
-                                    src={`https://flagcdn.com/w40/${match.nazionalitaPL2.substring(0, 2).toLowerCase()}.png`}
+                                    src={`https://flagcdn.com/${match.nazionalitaPL2.substring(0, 2).toLowerCase()}.svg`}
                                     alt={match.nazionalitaPL2}
                                     fill
                                     className="object-cover"

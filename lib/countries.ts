@@ -10,7 +10,7 @@ export async function getCountries(): Promise<Country[]> {
       code: country.cca2.toLowerCase(),
       name: country.name.common,
       // Update flag URL format to use 2-letter country code
-      flag: country.cca2 ? `https://flagcdn.com/w40/${country.cca2.toLowerCase()}.png` : "",
+      flag: country.cca2 ? `https://flagcdn.com/${country.cca2.toLowerCase()}.svg` : "",
     }))
 
     // Sort countries by name

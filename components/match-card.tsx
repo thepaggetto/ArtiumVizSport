@@ -72,7 +72,7 @@ export function MatchCard({ match }: MatchCardProps) {
               <div className="flex items-center gap-2">
                 <div className="relative h-5 w-5 overflow-hidden rounded-full">
                   <Image
-                      src={`https://flagcdn.com/w40/${match.nazionalitaPL1.substring(0, 2).toLowerCase()}.png`}
+                      src={`https://flagcdn.com/${match.nazionalitaPL1.substring(0, 2).toLowerCase()}.svg`}
                       alt={match.nazionalitaPL1}
                       fill
                       className="object-cover"
@@ -89,7 +89,7 @@ export function MatchCard({ match }: MatchCardProps) {
               <div className="flex items-center gap-2">
                 <div className="relative h-5 w-5 overflow-hidden rounded-full">
                   <Image
-                      src={`https://flagcdn.com/w40/${match.nazionalitaPL2.substring(0, 2).toLowerCase()}.png`}
+                      src={`https://flagcdn.com/${match.nazionalitaPL2.substring(0, 2).toLowerCase()}.svg`}
                       alt={match.nazionalitaPL2}
                       fill
                       className="object-cover"

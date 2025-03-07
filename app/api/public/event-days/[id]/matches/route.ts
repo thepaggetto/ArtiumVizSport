@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { headers } from "next/headers"
+import { getFlagUrl } from "@/lib/flag-utils"
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -46,9 +47,19 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const protocol = process.env.NODE_ENV === "production" ? "https" : "http"
     const baseUrl = `${protocol}://${host}`
 
+    const getFullUrl = (url: string | null | undefined) => {
+      if (!url) return ""
+      if (url.startsWith("http://") || url.startsWith("https://")) return url
+      return `${baseUrl}${url}`
+    }
+
     // Format matches for response
     const matchesObject = eventDay.matches.reduce(
         (acc, match) => {
+          // Genera sempre gli URL delle bandiere usando la funzione centralizzata
+          const flag1 = getFlagUrl(match.nazionalitaPL1)
+          const flag2 = getFlagUrl(match.nazionalitaPL2)
+
           acc[match.name] = {
             tipoGara: match.tipoGara,
             nomeCampionato: match.nomeCampionato,
@@ -56,20 +67,20 @@ export async function GET(request: Request, { params }: { params: { id: string }
             recordPL1: match.recordPL1,
             cittaPL1: match.cittaPL1,
             nazionalitaPL1: match.nazionalitaPL1,
-            svgPL1: match.svgPL1,
+            svgPL1: flag1,
             etàPL1: match.etàPL1,
             pesoPL1: match.pesoPL1,
             altezzaPL1: match.altezzaPL1,
-            fotoPL1: match.fotoPL1 ? `${baseUrl}/api/public/images/${match.name}/PL1` : "",
+            fotoPL1: match.fotoPL1 ? getFullUrl(`/api/public/images/${match.name}/PL1`) : "",
             nomePL2: match.nomePL2,
             recordPL2: match.recordPL2,
             cittaPL2: match.cittaPL2,
             nazionalitaPL2: match.nazionalitaPL2,
-            svgPL2: match.svgPL2,
+            svgPL2: flag2,
             etàPL2: match.etàPL2,
             pesoPL2: match.pesoPL2,
             altezzaPL2: match.altezzaPL2,
-            fotoPL2: match.fotoPL2 ? `${baseUrl}/api/public/images/${match.name}/PL2` : "",
+            fotoPL2: match.fotoPL2 ? getFullUrl(`/api/public/images/${match.name}/PL2`) : "",
           }
           return acc
         },
@@ -88,4 +99,3 @@ export async function GET(request: Request, { params }: { params: { id: string }
     return NextResponse.json({ error: "Failed to fetch matches" }, { status: 500 })
   }
 }
-

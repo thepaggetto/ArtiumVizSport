@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { headers } from "next/headers"
 import { db } from "@/lib/db"
 import { configService } from "@/lib/config-service"
+import { getFlagUrl } from "@/lib/flag-utils"
 
 export async function GET(request: Request) {
     try {
@@ -63,12 +64,23 @@ export async function GET(request: Request) {
         const protocol = process.env.NODE_ENV === "production" ? "https" : "http"
         const baseUrl = `${protocol}://${host}`
 
+        // Helper function to ensure complete URLs
+        const getFullUrl = (url: string | null | undefined) => {
+            if (!url) return ""
+            if (url.startsWith("http://") || url.startsWith("https://")) return url
+            return `${baseUrl}${url}`
+        }
+
         // Crea un oggetto con i match come chiavi
         // Questo è il formato preferito da Singular.Live per le lookup table
         const matchesData: Record<string, any> = {}
 
         eventDays.forEach((eventDay) => {
             eventDay.matches.forEach((match) => {
+                // Genera sempre gli URL delle bandiere usando la funzione centralizzata
+                const flag1 = getFlagUrl(match.nazionalitaPL1)
+                const flag2 = getFlagUrl(match.nazionalitaPL2)
+
                 matchesData[match.name] = {
                     id: match.id,
                     time: match.time,
@@ -83,20 +95,22 @@ export async function GET(request: Request) {
                         record: match.recordPL1 || "",
                         city: match.cittaPL1 || "",
                         nationality: match.nazionalitaPL1 || "",
+                        flag: flag1,
                         age: match.etàPL1 || "",
                         weight: match.pesoPL1 || "",
                         height: match.altezzaPL1 || "",
-                        photo: match.fotoPL1 ? `${baseUrl}/api/public/images/${match.name}/PL1` : "",
+                        photo: match.fotoPL1 ? getFullUrl(`/api/public/images/${match.name}/PL1`) : "",
                     },
                     player2: {
                         name: match.nomePL2 || "",
                         record: match.recordPL2 || "",
                         city: match.cittaPL2 || "",
                         nationality: match.nazionalitaPL2 || "",
+                        flag: flag2,
                         age: match.etàPL2 || "",
                         weight: match.pesoPL2 || "",
                         height: match.altezzaPL2 || "",
-                        photo: match.fotoPL2 ? `${baseUrl}/api/public/images/${match.name}/PL2` : "",
+                        photo: match.fotoPL2 ? getFullUrl(`/api/public/images/${match.name}/PL2`) : "",
                     },
                 }
             })

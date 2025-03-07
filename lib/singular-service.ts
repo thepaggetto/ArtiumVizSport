@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
 import { configService } from "@/lib/config-service"
+import { getFlagUrl } from "@/lib/flag-utils"
 
 export type SingularData = Record<string, any>
 
@@ -98,49 +99,47 @@ export const singularService = {
                         : "http://localhost:3000"
             }
 
-            // Formato lookup table (spesso usato da Singular.Live)
+            // Formato piatto per Singular.Live (come richiesto)
             const matchesData: Record<string, any> = {}
+
+            // Helper function to ensure complete URLs
+            const getFullUrl = (url: string | null | undefined) => {
+                if (!url) return ""
+                if (url.startsWith("http://") || url.startsWith("https://")) return url
+                return `${baseUrl}${url}`
+            }
 
             // Aggiungi informazioni sugli eventi
             eventDays.forEach((eventDay) => {
                 // Aggiungi i match per questo evento
                 eventDay.matches.forEach((match) => {
-                    // Helper function to ensure complete URLs
-                    const getFullUrl = (url: string | null | undefined) => {
-                        if (!url) return ""
-                        if (url.startsWith("http://") || url.startsWith("https://")) return url
-                        return `${baseUrl}${url}`
-                    }
+                    // Assicurati che gli URL delle bandiere siano sempre generati correttamente
+                    // Ignora eventuali valori svgPL1/svgPL2 esistenti e usa sempre getFlagUrl
+                    const flag1 = getFlagUrl(match.nazionalitaPL1)
+                    const flag2 = getFlagUrl(match.nazionalitaPL2)
 
+                    // Formato piatto come richiesto
                     matchesData[match.name] = {
-                        id: match.id,
-                        time: match.time,
-                        category: match.category,
-                        event: {
-                            date: eventDay.date,
-                            location: eventDay.location,
-                            broadcaster: eventDay.broadcaster,
-                        },
-                        player1: {
-                            name: match.nomePL1 || "",
-                            record: match.recordPL1 || "",
-                            city: match.cittaPL1 || "",
-                            nationality: match.nazionalitaPL1 || "",
-                            age: match.etàPL1 || "",
-                            weight: match.pesoPL1 || "",
-                            height: match.altezzaPL1 || "",
-                            photoPl1: getFullUrl(match.fotoPL1),
-                        },
-                        player2: {
-                            name: match.nomePL2 || "",
-                            record: match.recordPL2 || "",
-                            city: match.cittaPL2 || "",
-                            nationality: match.nazionalitaPL2 || "",
-                            age: match.etàPL2 || "",
-                            weight: match.pesoPL2 || "",
-                            height: match.altezzaPL2 || "",
-                            photoPl2: getFullUrl(match.fotoPL2),
-                        },
+                        tipoGara: match.tipoGara || "Prova",
+                        nomeCampionato: match.nomeCampionato || "Prova",
+                        nomePL1: match.nomePL1 || "",
+                        recordPL1: match.recordPL1 || "",
+                        cittaPL1: match.cittaPL1 || "",
+                        nazionalitaPL1: match.nazionalitaPL1 || "",
+                        svgPL1: flag1,
+                        etàPL1: match.etàPL1 || "",
+                        pesoPL1: match.pesoPL1 || "",
+                        altezzaPL1: match.altezzaPL1 || "",
+                        fotoPL1: getFullUrl(match.fotoPL1) || `${baseUrl}/api/public/images/${match.name}/PL1`,
+                        nomePL2: match.nomePL2 || "",
+                        recordPL2: match.recordPL2 || "",
+                        cittaPL2: match.cittaPL2 || "",
+                        nazionalitaPL2: match.nazionalitaPL2 || "",
+                        svgPL2: flag2,
+                        etàPL2: match.etàPL2 || "",
+                        pesoPL2: match.pesoPL2 || "",
+                        altezzaPL2: match.altezzaPL2 || "",
+                        fotoPL2: getFullUrl(match.fotoPL2) || `${baseUrl}/api/public/images/${match.name}/PL2`,
                     }
                 })
             })
