@@ -1,81 +1,71 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getCurrentUser } from "@/lib/auth-server"
-import { redirect } from "next/navigation"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Users, BoxIcon, Settings } from "lucide-react"
+import { Users, Database, Settings2, BarChart } from "lucide-react"
 
-export default async function AdminPage() {
-  const currentUser = await getCurrentUser()
-
-  // Redirect non-admin users
-  if (!currentUser || !currentUser.isAdmin) {
-    redirect("/")
-  }
-
+export default function AdminPage() {
   return (
-    <main className="container mx-auto py-10 px-4 md:px-6">
-      <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Pannello Amministratore</h1>
-          <p className="text-muted-foreground mt-1">Gestisci le impostazioni dell'applicazione e gli utenti</p>
-        </div>
+      <div className="container py-10">
+        <h1 className="text-3xl font-bold mb-2">Pannello Amministratore</h1>
+        <p className="text-muted-foreground mb-6">Gestisci le impostazioni dell'applicazione e gli utenti</p>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>Gestione Utenti</CardTitle>
-              <CardDescription>Crea e gestisci gli account utente</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Aggiungi, modifica o rimuovi utenti e gestisci i loro permessi.
-              </p>
-              <Button asChild>
-                <Link href="/admin/users">
-                  <Users className="mr-2 h-4 w-4" />
-                  Gestisci Utenti
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Gestione Utenti */}
+          <div className="bg-card rounded-lg border p-6">
+            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Gestione Utenti
+            </h2>
+            <p className="text-muted-foreground mb-4">Crea e gestisci gli account utente</p>
+            <p className="text-sm text-muted-foreground mb-4">
+              Aggiungi, modifica o rimuovi utenti e gestisci i loro permessi.
+            </p>
+            <Link
+                href="/admin/users"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Gestisci Utenti
+            </Link>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>Boxing Match Management</CardTitle>
+          {/* Boxing Match Management */}
+          <div className="bg-card rounded-lg border p-6">
+            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+              <Database className="h-5 w-5" />
+              Boxing Match Management
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              Visualizza e gestisci tutti gli incontri di pugilato nel sistema.
+            </p>
+            <p className="text-sm text-muted-foreground mb-4">
+              Gestisci gli incontri, i pugili e i dettagli degli eventi.
+            </p>
+            <Link
+                href="/"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Visualizza Incontri
+            </Link>
+          </div>
 
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Visualizza e gestisci tutti gli incontri di pugilato nel sistema.
-              </p>
-              <Button asChild>
-                <Link href="/">
-                  <BoxIcon className="mr-2 h-4 w-4" />
-                  Visualizza Incontri
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Impostazioni Sistema */}
+          <div className="bg-card rounded-lg border p-6">
+            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+              <Settings2 className="h-5 w-5" />
+              Impostazioni API e Push Dati
+            </h2>
+            <p className="text-muted-foreground mb-4">Configura lo stream dati </p>
+            <div className="space-y-2">
+              <Link
+                  href="/settings/singular"
+                  className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              >
+                <BarChart className="mr-2 h-4 w-4" />
+                Configura Push Dati
+              </Link>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>Impostazioni Sistema</CardTitle>
-              <CardDescription>Configura le impostazioni dell'applicazione</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">Regola le impostazioni di sistema e le preferenze.</p>
-              <Button asChild variant="outline">
-                <Link href="/admin/settings">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Impostazioni
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
-    </main>
   )
 }
 

@@ -68,3 +68,8 @@ model Match {
   updatedAt      DateTime @updatedAt
 }
 
+
+model Config {
+  key   String @id
+  value Json
+}
